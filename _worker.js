@@ -1,18 +1,30 @@
-
 // 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
 
-let mytoken= ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
+let mytoken = ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-    'icook.tw:2053#官方优选域名',
-    'cloudflare.cfgo.cc#优选官方线路',
+    "cf.090227.xyz"
 ];
 
 // 设置优选地址api接口
 let addressesapi = [
     'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
-    //'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
+    "https://addressesapi.090227.xyz/ct",
+    "https://addressesapi.090227.xyz/cmcc",
+    "https://addressesapi.090227.xyz/cmcc-ipv6",
+    "https://addressesapi.090227.xyz/CloudFlareYes",
+    "https://addressesapi.090227.xyz/ip.164746.xyz",
+    "https://ipdb.api.030101.xyz/?type=bestproxy&amp;country=true",
+    "https://ipdb.api.030101.xyz/?type=bestcf&amp;country=true",
+    "https://cn.xxxxxxxx.tk",
+    "https://ct.xxxxxxxx.tk",
+    "https://cm.xxxxxxxx.tk",
+    "https://cu.xxxxxxxx.tk",
+    "https://cnv6.xxxxxxxx.tk",
+    "https://ctv6.xxxxxxxx.tk",
+    "https://cmv6.xxxxxxxx.tk",
+    "https://cuv6.xxxxxxxx.tk",
 ];
 
 // 设置优选地址，不带端口号默认80，noTLS订阅生成
@@ -46,8 +58,8 @@ let CMproxyIPs = [
     //'proxyip.aliyun.fxxk.dedyn.io:HK',//匹配节点名, 有HK就分配该ProxyIP域名
 ]
 let socks5DataURL = '';//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data'
-let BotToken ='';
-let ChatID ='';
+let BotToken = '';
+let ChatID = '';
 let proxyhosts = [//本地代理域名池
     //'ppfv2tl9veojd-maillazy.pages.dev',
 ];
@@ -61,10 +73,11 @@ let total = 99;//PB
 let timestamp = 4102329600000;//2099-12-31
 const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 // 虚假uuid和hostname，用于发送给配置生成服务
-let fakeUserID ;
-let fakeHostName ;
+let fakeUserID;
+let fakeHostName;
+
 async function sendMessage(type, ip, add_data = "") {
-    if ( BotToken !== '' && ChatID !== ''){
+    if (BotToken !== '' && ChatID !== '') {
         let msg = "";
         const response = await fetch(`http://ip-api.com/json/${ip}?lang=zh-CN`);
         if (response.status == 200) {
@@ -74,7 +87,7 @@ async function sendMessage(type, ip, add_data = "") {
             msg = `${type}\nIP: ${ip}\n<tg-spoiler>${add_data}`;
         }
 
-        let url = "https://api.telegram.org/bot"+ BotToken +"/sendMessage?chat_id=" + ChatID + "&parse_mode=HTML&text=" + encodeURIComponent(msg);
+        let url = "https://api.telegram.org/bot" + BotToken + "/sendMessage?chat_id=" + ChatID + "&parse_mode=HTML&text=" + encodeURIComponent(msg);
         return fetch(url, {
             method: 'get',
             headers: {
@@ -86,7 +99,8 @@ async function sendMessage(type, ip, add_data = "") {
     }
 }
 
-let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
+let MamaJustKilledAMan = ['telegram', 'twitter', 'miaoko'];
+
 async function getAddressesapi(api) {
     if (!api || api.length === 0) {
         return [];
@@ -153,7 +167,7 @@ async function getAddressescsv(tls) {
 
             const text = await response.text();// 使用正确的字符编码解析文本内容
             let lines;
-            if (text.includes('\r\n')){
+            if (text.includes('\r\n')) {
                 lines = text.split('\r\n');
             } else {
                 lines = text.split('\n');
@@ -200,10 +214,10 @@ async function ADD(envadd) {
     var addtext = envadd.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');	// 将空格、双引号、单引号和换行符替换为逗号
     //console.log(addtext);
     if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
-    if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
+    if (addtext.charAt(addtext.length - 1) == ',') addtext = addtext.slice(0, addtext.length - 1);
     const add = addtext.split(',');
     //console.log(add);
-    return add ;
+    return add;
 }
 
 async function nginx() {
@@ -234,13 +248,13 @@ async function nginx() {
 	</body>
 	</html>
 	`
-    return text ;
+    return text;
 }
 
 let protocol;
 let socks5Data;
 export default {
-    async fetch (request, env) {
+    async fetch(request, env) {
         if (env.TOKEN) mytoken = await ADD(env.TOKEN);
         //mytoken = env.TOKEN.split(',') || mytoken;
         BotToken = env.TGTOKEN || BotToken;
@@ -249,7 +263,8 @@ export default {
         subconfig = env.SUBCONFIG || subconfig;
         FileName = env.SUBNAME || FileName;
         socks5DataURL = env.SOCKS5DATA || socks5DataURL;
-        if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);;
+        if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);
+        ;
         //console.log(CMproxyIPs);
         EndPS = env.PS || EndPS;
         const userAgentHeader = request.headers.get('User-Agent');
@@ -261,7 +276,7 @@ export default {
         let path = "";
         let sni = "";
         let type = "ws";
-        let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
+        let UD = Math.floor(((timestamp - Date.now()) / timestamp * 99 * 1099511627776 * 1024) / 2);
         if (env.UA) MamaJustKilledAMan = MamaJustKilledAMan.concat(await ADD(env.UA));
 
         const currentDate = new Date();
@@ -271,7 +286,7 @@ export default {
         //console.log(`${fakeUserID}\n${fakeHostName}`); // 打印fakeID
 
         total = total * 1099511627776 * 1024;
-        let expire= Math.floor(timestamp / 1000) ;
+        let expire = Math.floor(timestamp / 1000);
 
         link = env.LINK || link;
         const links = await ADD(link);
@@ -299,13 +314,13 @@ export default {
             try {
                 const response = await fetch(socks5DataURL);
                 const socks5DataText = await response.text();
-                if (socks5DataText.includes('\r\n')){
+                if (socks5DataText.includes('\r\n')) {
                     socks5Data = socks5DataText.split('\r\n').filter(line => line.trim() !== '');
                 } else {
                     socks5Data = socks5DataText.split('\n').filter(line => line.trim() !== '');
                 }
             } catch {
-                socks5Data = null ;
+                socks5Data = null;
             }
         }
 
@@ -319,7 +334,7 @@ export default {
                 host = hosts[Math.floor(Math.random() * hosts.length)];
             }
 
-            if (env.PASSWORD){
+            if (env.PASSWORD) {
                 协议类型 = 'Trojan';
                 uuid = env.PASSWORD
             } else {
@@ -333,7 +348,7 @@ export default {
             edgetunnel = env.ED || edgetunnel;
             RproxyIP = env.RPROXYIP || RproxyIP;
 
-            if (host == "null" || uuid == "null" ){
+            if (host == "null" || uuid == "null") {
                 let 空字段;
                 if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
                 else if (host == "null") 空字段 = "HOST";
@@ -368,9 +383,9 @@ export default {
             edgetunnel = url.searchParams.get('edgetunnel') || url.searchParams.get('epeius') || edgetunnel;
             RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 
-            if (url.searchParams.has('edgetunnel') || url.searchParams.has('uuid')){
+            if (url.searchParams.has('edgetunnel') || url.searchParams.has('uuid')) {
                 协议类型 = 'VLESS';
-            } else if (url.searchParams.has('epeius') || url.searchParams.has('password') || url.searchParams.has('pw')){
+            } else if (url.searchParams.has('epeius') || url.searchParams.has('password') || url.searchParams.has('pw')) {
                 协议类型 = 'Trojan';
             }
 
@@ -408,7 +423,7 @@ export default {
 
                 return new Response(responseText, {
                     status: 400,
-                    headers: { 'content-type': 'text/plain; charset=utf-8' },
+                    headers: {'content-type': 'text/plain; charset=utf-8'},
                 });
             }
 
@@ -437,12 +452,12 @@ export default {
                     'Content-Type': 'text/html; charset=UTF-8',
                 },
             });
-        } else if ( (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter')) ) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
+        } else if ((userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
             subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(subconverterUrl)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-        } else if ( (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+        } else if ((userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
             subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(subconverterUrl)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
         } else {
-            if(host.includes('workers.dev') || host.includes('pages.dev')) {
+            if (host.includes('workers.dev') || host.includes('pages.dev')) {
                 if (proxyhostsURL) {
                     try {
                         const response = await fetch(proxyhostsURL);
@@ -475,7 +490,7 @@ export default {
             const uniqueAddresses = [...new Set(addresses)];
 
             let notlsresponseBody;
-            if(noTLS == 'true' && 协议类型 == 'VLESS'){
+            if (noTLS == 'true' && 协议类型 == 'VLESS') {
                 const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
                 const newAddressesnotlscsv = await getAddressescsv('FALSE');
                 addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
@@ -513,7 +528,7 @@ export default {
                         addressid = match[3] || address;
                     }
 
-                    const httpPorts = ["8080","8880","2052","2082","2086","2095"];
+                    const httpPorts = ["8080", "8880", "2052", "2082", "2086", "2095"];
                     if (!isValidIPv4(address) && port == "80") {
                         for (let httpPort of httpPorts) {
                             if (address.includes(httpPort)) {
@@ -591,7 +606,7 @@ export default {
                     addressid = match[3] || address;
                 }
 
-                const httpsPorts = ["2053","2083","2087","2096","8443"];
+                const httpsPorts = ["2053", "2083", "2087", "2096", "8443"];
                 if (!isValidIPv4(address) && port == "443") {
                     for (let httpsPort of httpsPorts) {
                         if (address.includes(httpsPort)) {
@@ -631,17 +646,17 @@ export default {
                     }
                 }
 
-                let 伪装域名 = host ;
-                let 最终路径 = path ;
-                let 节点备注 = EndPS ;
-                if(proxyhosts && (host.includes('.workers.dev') || host.includes('pages.dev'))) {
+                let 伪装域名 = host;
+                let 最终路径 = path;
+                let 节点备注 = EndPS;
+                if (proxyhosts && (host.includes('.workers.dev') || host.includes('pages.dev'))) {
                     最终路径 = `/${host}${path}`;
                     伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-                    节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
+                    节点备注 = `${EndPS}`;
                     sni = 伪装域名;
                 }
 
-                if (协议类型 == 'Trojan'){
+                if (协议类型 == 'Trojan') {
                     const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=h3&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 
                     return trojanLink;
@@ -665,10 +680,10 @@ export default {
                 console.log("notlsresponseBody: " + notlsresponseBody);
             }
 
-            if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')) {
+            if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
                 const TrojanLinks = combinedContent.split('\n');
                 const TrojanLinksJ8 = generateFakeInfo(TrojanLinks.join('|'), uuid, host);
-                subconverterUrl =  `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinksJ8)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
+                subconverterUrl = `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinksJ8)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
             } else {
                 const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
 
@@ -695,7 +710,7 @@ export default {
 
             let subconverterContent = await subconverterResponse.text();
 
-            if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+            if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
                 subconverterContent = surge(subconverterContent, host);
             }
             subconverterContent = revertFakeInfo(subconverterContent, uuid, host);
@@ -710,7 +725,7 @@ export default {
         } catch (error) {
             return new Response(`Error: ${error.message}`, {
                 status: 500,
-                headers: { 'content-type': 'text/plain; charset=utf-8' },
+                headers: {'content-type': 'text/plain; charset=utf-8'},
             });
         }
     }
@@ -718,7 +733,7 @@ export default {
 
 function surge(content, url) {
     let 每行内容;
-    if (content.includes('\r\n')){
+    if (content.includes('\r\n')) {
         每行内容 = content.split('\r\n');
     } else {
         每行内容 = content.split('\n');
