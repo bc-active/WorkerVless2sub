@@ -4,17 +4,27 @@ let mytoken = ['auto'];//快速订阅访问入口, 留空则不启动快速订�
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-    'icook.tw:2053#官方优选域名',
-    'cloudflare.cfgo.cc#优选官方线路',
+    "cf.090227.xyz#优选官方线路"
 ];
 
 // 设置优选地址api接口
 let addressesapi = [
     'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
-    'https://ct.xxxxxxxx.tk/',
-    'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-    'https://addressesapi.090227.xyz/CloudFlareYes',
-    'https://addressesapi.090227.xyz/ct'
+    "https://addressesapi.090227.xyz/ct",
+    "https://addressesapi.090227.xyz/cmcc",
+    "https://addressesapi.090227.xyz/cmcc-ipv6",
+    "https://addressesapi.090227.xyz/CloudFlareYes",
+    "https://addressesapi.090227.xyz/ip.164746.xyz",
+    "https://ipdb.api.030101.xyz/?type=bestproxy&amp;country=true",
+    "https://ipdb.api.030101.xyz/?type=bestcf&amp;country=true",
+    "https://cn.xxxxxxxx.tk",
+    "https://ct.xxxxxxxx.tk",
+    "https://cm.xxxxxxxx.tk",
+    "https://cu.xxxxxxxx.tk",
+    "https://cnv6.xxxxxxxx.tk",
+    "https://ctv6.xxxxxxxx.tk",
+    "https://cmv6.xxxxxxxx.tk",
+    "https://cuv6.xxxxxxxx.tk",
 ];
 
 // 设置优选地址，不带端口号默认80，noTLS订阅生成
@@ -26,7 +36,7 @@ let addressesnotls = [
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
-    'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+    "https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt", //可参考内容格式 自行搭建。
 ];
 
 let DLS = 8;//速度下限
@@ -41,10 +51,7 @@ let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
 let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
-    "proxyip.us.fxxk.dedyn.io",
-    "proxyip.sg.fxxk.dedyn.io",
-    "proxyip.jp.fxxk.dedyn.io",
-    "proxyip.hk.fxxk.dedyn.io"
+    "proxyip.us.fxxk.dedyn.io"
 ];
 let CMproxyIPs = [
     //'proxyip.aliyun.fxxk.dedyn.io:HK',//匹配节点名, 有HK就分配该ProxyIP域名
@@ -644,7 +651,7 @@ export default {
                 if (proxyhosts && (host.includes('.workers.dev') || host.includes('pages.dev'))) {
                     最终路径 = `/${host}${path}`;
                     伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-                    节点备注 = `${EndPS} `;
+                    节点备注 = `${EndPS}`;
                     sni = 伪装域名;
                 }
 
