@@ -15,7 +15,6 @@ let addressesapi = [
     "https://addressesapi.090227.xyz/cmcc-ipv6",
     "https://addressesapi.090227.xyz/CloudFlareYes",
     "https://addressesapi.090227.xyz/ip.164746.xyz",
-    "https://ipdb.api.030101.xyz/?type=bestproxy&amp;country=true",
     "https://ipdb.api.030101.xyz/?type=bestcf&amp;country=true",
     "https://cn.xxxxxxxx.tk",
     "https://ct.xxxxxxxx.tk",
